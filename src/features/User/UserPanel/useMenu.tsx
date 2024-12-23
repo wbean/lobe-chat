@@ -75,7 +75,8 @@ export const useMenu = () => {
   const openSettings = useOpenSettings();
   const { t } = useTranslation(['common', 'setting', 'auth']);
   const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
-  const [isLogin, isLoginWithAuth, isLoginWithClerk] = useUserStore((s) => [
+  const [enableAuth, isLogin, isLoginWithAuth, isLoginWithClerk] = useUserStore((s) => [
+    authSelectors.enabledAuth(s),
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
     authSelectors.isLoginWithClerk(s),
@@ -242,6 +243,7 @@ export const useMenu = () => {
     },
     ...(isLoginWithClerk ? profile : []),
     ...(isLogin ? settings : []),
+    ...(!enableAuth || (enableAuth && isLoginWithAuth) ? profile : []),
     /* ↓ cloud slot ↓ */
 
     /* ↑ cloud slot ↑ */
